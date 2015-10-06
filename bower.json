@@ -1,0 +1,15 @@
+{
+   "name": "kurzd",
+   "version": "0.1.0-pre",
+   "description": "A URL shortener for use as an ElasticSearch plugin",
+   "license": "MIT",
+   "dependencies": {
+      "laxar": "~1.1.0-alpha.9",
+      "laxar-uikit": "~1.1.0",
+      "laxar-patterns": "~1.1.0-alpha.2"
+   },
+   "devDependencies": {
+      "jasmine": "2.3.x",
+      "laxar-mocks": "~0.4.0"
+   }
+}
