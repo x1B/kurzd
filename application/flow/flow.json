@@ -3,14 +3,15 @@
       "entry": {
          "redirectTo": "shorten"
       },
-
-      "shorten": {
-         "page":  "shorten",
-         "targets": {
-         }
+      "lookup": {
+         "redirectTo": "x"
       },
 
-      "lookup": {
+      "shorten": {
+         "page":  "shorten"
+      },
+
+      "x/:key": {
          "page":  "lookup"
       }
    }

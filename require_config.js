@@ -1,6 +1,9 @@
 var require = {
    baseUrl: 'bower_components',
-   deps: [],
+   deps: [
+      'es6-promise/promise',
+      'fetch/fetch'
+   ],
    paths: {
       // LaxarJS Core and dependencies:
       laxar: 'laxar/dist/laxar.with-deps',

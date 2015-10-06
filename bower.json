@@ -7,7 +7,9 @@
     "laxar": "~1.1.0-alpha.9",
     "laxar-uikit": "~1.1.0",
     "laxar-patterns": "~1.1.0-alpha.2",
-    "react": "~0.13.3"
+    "react": "~0.13.3",
+    "fetch": "~0.9.0",
+    "es6-promise": "~3.0.2"
   },
   "devDependencies": {
     "jasmine": "2.3.x",

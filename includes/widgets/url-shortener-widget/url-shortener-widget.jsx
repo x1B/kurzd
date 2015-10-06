@@ -63,7 +63,7 @@ function create( eventBus, features, reactRender, context ) {
          <a href={model.shortUrl} title={resultTitle}>{model.shortUrl}</a>;
 
       return <div className={classList( resultClasses )}>
-         <h1 className='url-shortener-result text-center'>{result}</h1>
+         <h2 className='url-shortener-result text-center'>{result}</h2>
          <h3 className='text-center'>{resultStatus}</h3>
       </div>;
    }

@@ -3,6 +3,15 @@
 
    "areas": {
       "activities": [
+         {
+            "widget": "elasticsearch-url-shortener-activity",
+            "features": {
+               "lookup": {
+                  "action": "lookup",
+                  "resource": "mapping"
+               }
+            }
+         }
       ],
 
       "content": [

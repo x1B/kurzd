@@ -7,9 +7,7 @@
             "widget": "elasticsearch-url-shortener-activity",
             "features": {
                "shorten": {
-                  "action": "shorten"
-               },
-               "result": {
+                  "action": "shorten",
                   "resource": "mapping"
                }
             }
