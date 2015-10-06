@@ -1,0 +1,36 @@
+{
+   "name": "elasticsearch-url-shortener-activity",
+   "description": "Saves URL shortener mappings to ElasticSearch",
+
+   "integration": {
+      "technology": "plain",
+      "type": "activity"
+   },
+
+   "features": {
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "type": "object",
+      "properties": {
+         "shorten": {
+            "type": "object",
+            "properties": {
+               "action": {
+                  "description": "An action to request lookup/insert of a URL (data.url)",
+                  "type": "string",
+                  "format": "topic"
+               }
+            }
+         },
+         "result": {
+            "type": "object",
+            "properties": {
+               "resource": {
+                  "description": "The lookup/insert result for a URL (data.url, data.shortUrl)",
+                  "type": "string",
+                  "format": "topic"
+               }
+            }
+         }
+      }
+   }
+}

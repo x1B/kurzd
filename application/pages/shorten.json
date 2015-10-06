@@ -1,0 +1,35 @@
+{
+   "layout": "one-column",
+
+   "areas": {
+      "activities": [
+         {
+            "widget": "elasticsearch-url-shortener-activity",
+            "features": {
+               "shorten": {
+                  "action": "shorten"
+               },
+               "result": {
+                  "resource": "mapping"
+               }
+            }
+         }
+      ],
+
+      "content": [
+         {
+            "widget": "url-shortener-widget",
+            "features": {
+               "shorten": {
+                  "action": "shorten"
+               },
+               "result": {
+                  "resource": "mapping"
+               }
+            }
+         }
+      ],
+
+      "footer": []
+   }
+}

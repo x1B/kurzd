@@ -4,6 +4,7 @@
     "homepage": "",
     "licenses": [
       "MIT"
-    ]
+    ],
+    "laxarIntegrationTechnology": "plain"
   }
 }

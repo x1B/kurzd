@@ -5,8 +5,9 @@
 require( [
    'laxar',
    'laxar-application-dependencies',
-   'json!laxar-application/var/flows/main/resources.json'
-], function( ax, applicationDependencies, resources ) {
+   'json!laxar-application/var/flows/main/resources.json',
+   'laxar-react-adapter'
+], function( ax, applicationDependencies, resources, reactAdapter ) {
    'use strict';
 
    // prepare file listings for efficient asset loading
@@ -17,5 +18,5 @@ require( [
       includes: resources
    };
 
-   ax.bootstrap( applicationDependencies );
+   ax.bootstrap( applicationDependencies, [ reactAdapter ] );
 } );

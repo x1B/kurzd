@@ -11,12 +11,18 @@ window.laxar = ( function() {
       theme: 'default',
 
       widgets: {
-         // put your widgets' global ax.configuration.get( ... ) options here
+         kurzd: {
+            elasticsearch: {
+               host: 'localhost:9200',
+               index: 'kurzd'
+            }
+         }
       },
 
       useEmbeddedFileListings: mode === 'PRODUCTION',
       useMergedCss: mode === 'PRODUCTION',
-      eventBusTimeoutMs: (mode === 'PRODUCTION' ? 120 : 10) * 1000
+      eventBusTimeoutMs: (mode === 'PRODUCTION' ? 120 : 10) * 1000,
+
    };
 
 } )();

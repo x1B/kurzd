@@ -37,11 +37,9 @@ var require = {
       jasmine2: 'jasmine2/lib/jasmine-core/jasmine',
       'promise-polyfill': 'promise-polyfill/Promise',
 
-      // Testing: old LaxarJS testing
-      'laxar/laxar_testing': 'laxar/dist/laxar_testing',
-      jquery: 'jquery/dist/jquery',
-      jasmine: 'jasmine/lib/jasmine-core/jasmine',
-      q_mock: 'q_mock/q'
+      // Application specific:
+      react: 'react/react',
+      'laxar-react-adapter': '../includes/lib/laxar-react-adapter/laxar-react-adapter'
    },
    packages: [
       {

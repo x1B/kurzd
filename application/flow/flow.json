@@ -1,13 +1,17 @@
 {
    "places": {
       "entry": {
-         "redirectTo": "home"
+         "redirectTo": "shorten"
       },
 
-      "home": {
-         "page":  "home",
+      "shorten": {
+         "page":  "shorten",
          "targets": {
          }
+      },
+
+      "lookup": {
+         "page":  "lookup"
       }
    }
 }

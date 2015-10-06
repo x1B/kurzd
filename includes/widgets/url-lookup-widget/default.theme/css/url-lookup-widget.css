@@ -1,0 +1,14 @@
+/**
+ * Copyright 2015 Michael Kurze
+ * Released under the MIT license
+ */
+@charset "UTF-8";
+
+.url-lookup-widget .url-shortener-input {
+   font-size: 36px;
+   height: 64px;
+}
+
+.url-lookup-widget .jumbotron {
+   padding: 24px;
+}
