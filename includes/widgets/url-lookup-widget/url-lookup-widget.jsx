@@ -50,7 +50,7 @@ function create( eventBus, features, reactRender, context ) {
       return <form className='jumbotron'>
          <h3><label htmlFor={inputId}><i className='fa fa-search' /> Enter a short-key to lookup</label></h3>
          <div className='form-group'>
-            <input type='url'  className='form-control url-shortener-input' id={inputId}
+            <input type='text'  className='form-control url-shortener-input' id={inputId}
                    placeholder='e.g. abc123' onChange={updateKey} value={model.viewKey} />
          </div>
       </form>;

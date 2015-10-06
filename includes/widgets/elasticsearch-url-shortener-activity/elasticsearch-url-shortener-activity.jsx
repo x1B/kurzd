@@ -17,6 +17,7 @@ function create( eventBus, features, flowService, configuration ) {
       eventBus.publish( 'willTakeAction.' + action, { action } );
 
       lookup( key ).then( ({ url }) => {
+         console.log( 'lookup: ', key, url ); // :TODO: Delete
          eventBus.publish( 'didReplace.' + resource, {
             resource,
             data: { url, key }
@@ -64,9 +65,15 @@ function create( eventBus, features, flowService, configuration ) {
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    function lookup( key ) {
-      return fetch( mappingUrl( key ), {
-         method: 'GET'
-      } ).then( handleResult, handleError );
+      return fetch( mappingUrl( key ), { method: 'GET' } )
+         .then( handleResult, handleError );
+
+      function handleResult( response ) {
+         if( response.ok ) {
+            return response.json().then( body => ({ key, url: body._source.url }) );
+         }
+         return handleError( response.statusText );
+      }
 
       function handleError( error ) {
          report( 'Could not shorten URL', error );
@@ -81,20 +88,19 @@ function create( eventBus, features, flowService, configuration ) {
 
    function shorten( url ) {
       const key = generateKey();
-      return fetch( mappingUrl( key ) + '/_create', {
-         method: 'PUT',
-         body: JSON.stringify( { key, url } )
-      } ).then( handleResult, handleError );
+      const body = JSON.stringify( { key, url } );
+      return fetch( mappingUrl( key ) + '/_create', { method: 'PUT', body } )
+         .then( handleResult, handleError );
 
       function handleResult( response ) {
          if( response.ok ) {
             return response.json().then( body => ({ key }) );
          }
-         return handleError( response.statusText );
+         return handleError( response.statusText, response );
       }
 
-      function handleError( error ) {
-         report( 'Could not shorten URL', error );
+      function handleError( error, response ) {
+         report( 'Could not shorten URL', error, response || { status: '' } );
          eventBus.publish( 'didTakeAction.' + event.action, {
             action: event.action,
             outcome: 'ERROR'
