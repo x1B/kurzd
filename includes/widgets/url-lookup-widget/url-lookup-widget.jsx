@@ -7,30 +7,95 @@ import ax from 'laxar';
 
 const injections = [ 'axEventBus', 'axFeatures', 'axReactRender', 'axContext' ];
 
+const keyLength = 6;
+
 function create( eventBus, features, reactRender, context ) {
 
    const model = {
       waiting: false,
       viewKey: '',
       submitKey: null,
-      url: null
+      url: null,
+      redirect: {
+         url: null,
+         inSeconds: null,
+         timeout: null
+      }
    };
 
-   const lookup = ax.fn.debounce( lookupImmediately, 200 );
+   eventBus.subscribe( 'endLifecycleRequest', cancelAnyRedirect );
+   eventBus.subscribe( 'didNavigate', handleDidNavigate );
+   eventBus.subscribe( 'didReplace.' + features.result.resource, handleDidReplace );
 
-   eventBus.subscribe( 'didReplace.' + features.result.resource, ({ data: { url, key } }) => {
-      if( key !== model.submitKey ) {
-         // stale request
-         return;
-      }
-      model.url = url;
-      model.waiting = false;
-      render();
-   } );
+   const lookup = ax.fn.debounce( lookupImmediately, 100 );
 
    return {
       onDomAvailable: render
    };
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function handleDidReplace( event ) {
+      const { data: { url, key } } = event;
+      if( key !== model.submitKey ) {
+         // stale request
+         return;
+      }
+
+      model.waiting = false;
+      if( !url ) {
+         model.notFound = true;
+         render();
+         return;
+      }
+
+      model.url = url;
+      startRedirect( url );
+      render();
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function handleDidNavigate( event ) {
+      const { data: { key } } = event;
+      if( key ) {
+         model.viewKey = key;
+         lookup();
+         render();
+      }
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function startRedirect( url ) {
+      cancelAnyRedirect();
+
+      model.redirect.timeout = window.setTimeout( next, 1000 );
+      model.redirect.inSeconds = 3;
+      model.redirect.url = url;
+      function next() {
+         --model.redirect.inSeconds;
+         if( model.redirect.inSeconds <= 0 ) {
+            window.location.href = model.url;
+         }
+         else {
+            model.redirect.timeout = window.setTimeout( next, 1000 );
+         }
+         render();
+      }
+   }
+
+   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   function cancelAnyRedirect() {
+      if( model.redirect.timeout === null ) {
+         return;
+      }
+      window.clearTimeout( model.redirect.timeout );
+      model.redirect.timeout = null;
+      model.redirect.url = null;
+      model.redirect.inSeconds = null;
+   }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -50,8 +115,13 @@ function create( eventBus, features, reactRender, context ) {
       return <form className='jumbotron'>
          <h3><label htmlFor={inputId}><i className='fa fa-search' /> Enter a short-key to lookup</label></h3>
          <div className='form-group'>
-            <input type='text'  className='form-control url-shortener-input' id={inputId}
-                   placeholder='e.g. abc123' onChange={updateKey} value={model.viewKey} />
+            <input autoComplete={true} type='text'
+                   length={keyLength}
+                   className='form-control url-shortener-input'
+                   id={inputId}
+                   placeholder='e.g. abc123'
+                   value={model.viewKey}
+                   onChange={updateKey} />
          </div>
       </form>;
    }
@@ -61,21 +131,44 @@ function create( eventBus, features, reactRender, context ) {
    function renderResult() {
       const resultClasses = {
          waiting: model.waiting,
-         hidden: !(model.waiting || model.shortUrl ),
+         hidden: !(model.waiting || model.viewKey),
          'url-shortener-result-ok': model.shortUrl,
+         'url-shortener-result-404': model.notFound,
          jumbotron: true
       };
 
-      const resultStatus = model.waiting ?
-         '…looking up…' :
-         'Long URL for key "' + model.submitUrl + '"';
-      const result = model.waiting ?
-         <i className='fa fa-spinner' /> :
-         <a href={model.shortUrl} title={resultStatus}>{model.shortUrl}</a>;
+      const status = ({viewKey, waiting, notFound, redirect}) => {
+         if( viewKey && viewKey.length !== keyLength ) {
+            return {
+               symbol: '',
+               info: 'Lookup key must be ' + keyLength + ' characters long!'
+            };
+         }
+         if( waiting ) {
+            return {
+               symbol: <i className='fa fa-spinner' />,
+               info: '…looking up…'
+            };
+         }
+         if( notFound ) {
+            return {
+               symbol: <i className='fa fa-meh-o' />,
+               info: '404: nothing found for ' + model.submitKey
+            };
+         }
+         if( redirect ) {
+            return {
+               symbol: model.redirect.inSeconds || '0',
+               info: <span>Redirecting to<br /><a href={model.redirect.url}>{model.redirect.url}</a></span>
+            };
+         }
+      };
+
+      const { symbol, info } = status( model );
 
       return <div className={classList( resultClasses )}>
-         <h1 className='text-center'>{result}</h1>
-         <h3 className='text-center'>{resultStatus}</h3>
+         <h1 className='text-center'>{symbol}</h1>
+         <h3 className='text-center'>{info}</h3>
       </div>;
    }
 
@@ -83,13 +176,21 @@ function create( eventBus, features, reactRender, context ) {
 
    function updateKey( ev ) {
       model.viewKey = ev.target.value;
-      lookup();
+      if( model.viewKey.length === keyLength ) {
+         lookup();
+      }
       render();
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    function lookupImmediately() {
+      if( model.submitKey === model.viewKey ) {
+         return;
+      }
+      cancelAnyRedirect();
+      model.notFound = false;
+      model.waiting = true;
       model.submitKey = model.viewKey;
       eventBus.publish( 'takeActionRequest.' + features.lookup.action, {
          action: features.lookup.action,

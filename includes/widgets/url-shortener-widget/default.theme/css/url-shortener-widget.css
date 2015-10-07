@@ -14,5 +14,10 @@
 }
 
 .url-shortener-widget .jumbotron.url-shortener-result-ok {
-   background: #dff0d8;
+   background: #62c462;
+   color: #f0f0f0;
+}
+
+.url-shortener-widget .jumbotron.url-shortener-result-ok h3 {
+   font-weight: bold;
 }

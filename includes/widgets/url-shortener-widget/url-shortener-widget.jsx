@@ -39,7 +39,11 @@ function create( eventBus, features, reactRender, context ) {
       return <form className="jumbotron">
          <h3><label htmlFor={inputId}><i className='fa fa-plus-circle' /> Paste a URL to shorten:</label></h3>
          <div className='form-group'>
-            <input type='url' className='form-control url-shortener-input' id={inputId} placeholder='http://...'
+            <input type='url'
+                   autoComplete={true}
+                   className='form-control url-shortener-input'
+                   id={inputId}
+                   placeholder='http://...'
                    onChange={updateUrl} value={model.viewUrl} />
          </div>
          <button disabled={!model.viewUrl} type="button" className='btn btn-primary btn-lg'
@@ -56,11 +60,12 @@ function create( eventBus, features, reactRender, context ) {
          'url-shortener-result-ok': model.shortUrl,
          jumbotron: true
       };
-      const resultStatus = model.waiting ? '…kurzing…' : 'You got kurz\'d!';
       const resultTitle = 'Short URL for "' + model.submitUrl + '"';
       const result = model.waiting ?
          <i className='fa fa-spinner' /> :
-         <a href={model.shortUrl} title={resultTitle}>{model.shortUrl}</a>;
+         <span>Your short URL:<br/><a href={model.shortUrl} title={resultTitle}>{model.shortUrl}</a></span>;
+
+      const resultStatus = model.waiting ? '…kurzing…' : 'Short key: ' + model.key;
 
       return <div className={classList( resultClasses )}>
          <h2 className='url-shortener-result text-center'>{result}</h2>
@@ -91,13 +96,14 @@ function create( eventBus, features, reactRender, context ) {
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   function handleResult({ data: { url, shortUrl } }) {
+   function handleResult({ data: { url, shortUrl, key } }) {
       if( url !== model.submitUrl ) {
          // stale request
          return;
       }
       model.shortUrl = shortUrl;
       model.waiting = false;
+      model.key = key;
       render();
    }
 

@@ -17,12 +17,11 @@ function create( eventBus, features, flowService, configuration ) {
       eventBus.publish( 'willTakeAction.' + action, { action } );
 
       lookup( key ).then( ({ url }) => {
-         console.log( 'lookup: ', key, url ); // :TODO: Delete
          eventBus.publish( 'didReplace.' + resource, {
             resource,
             data: { url, key }
          } );
-         eventBus.publish( 'didTakeAction.' + action, { action } );
+         eventBus.publish( 'didTakeAction.' + action, { action, outcome: url ? 'SUCCESS' : 'ERROR' } );
       } );
    } );
 
@@ -72,15 +71,14 @@ function create( eventBus, features, flowService, configuration ) {
          if( response.ok ) {
             return response.json().then( body => ({ key, url: body._source.url }) );
          }
+         else if( response.status === 404 ) {
+            return { key: key, url: null };
+         }
          return handleError( response.statusText );
       }
 
       function handleError( error ) {
-         report( 'Could not shorten URL', error );
-         eventBus.publish( 'didTakeAction.' + event.action, {
-            action: event.action,
-            outcome: 'ERROR'
-         } );
+         report( 'Could not lookup key', error );
       }
    }
 
@@ -112,7 +110,7 @@ function create( eventBus, features, flowService, configuration ) {
 
    function report( message, esOperation, response ) {
       var msg =
-         message + ' (Elasticsearch <em>' + esOperation + '</em> failed with ' + response.status +')';
+         message + ' (Elasticsearch <em>' + esOperation + '</em> failed with ' + response +')';
       ax.log.info( msg );
       return eventBus.publish( 'didEncounterError.' + esOperation, { code: esOperation, message: msg } );
    }

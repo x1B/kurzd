@@ -12,3 +12,7 @@
 .url-lookup-widget .jumbotron {
    padding: 24px;
 }
+
+.url-shortener-widget .jumbotron.url-shortener-result-ok {
+   background: #62c462;
+}

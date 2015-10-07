@@ -8,7 +8,7 @@ window.laxar = ( function() {
    return {
       name: 'kurzd',
       description: 'A URL shortener for use as an ElasticSearch plugin',
-      theme: 'default',
+      theme: 'bootswatch-slate',
 
       widgets: {
          kurzd: {
@@ -21,8 +21,7 @@ window.laxar = ( function() {
 
       useEmbeddedFileListings: mode === 'PRODUCTION',
       useMergedCss: mode === 'PRODUCTION',
-      eventBusTimeoutMs: (mode === 'PRODUCTION' ? 120 : 10) * 1000,
-
+      eventBusTimeoutMs: (mode === 'PRODUCTION' ? 120 : 10) * 1000
    };
 
 } )();
