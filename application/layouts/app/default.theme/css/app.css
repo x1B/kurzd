@@ -1,11 +1,40 @@
-.one-column-layout.container {
+.app-layout.container {
    position: relative
 }
 
-.one-column-layout .ax-footer {
+.app-layout header {
+   padding-bottom: 0;
+}
+
+.app-layout i {
+   color: #f89406;
+}
+
+.app-layout header a,
+.app-layout header a:link,
+.app-layout header a:active,
+.app-layout header a:focus,
+.app-layout header a:visited {
+   text-decoration: none;
+}
+
+.app-layout header a:hover {
+   color: #f89406;
+   text-decoration: none;
+}
+
+.app-layout header h3 {
+   padding-top: 11px;
+}
+
+.app-layout header h3 a {
+   padding-left: 12px;
+}
+
+.app-layout .ax-footer {
    margin-top: 60px
 }
 
-[data-ax-widget-area='content'] {
+.app-layout [data-ax-widget-area='content'] {
    min-height: 244px;
 }

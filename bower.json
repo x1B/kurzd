@@ -10,7 +10,7 @@
     "react": "~0.13.3",
     "fetch": "~0.9.0",
     "es6-promise": "~3.0.2",
-    "bootswatch": "~3.3.5+4"
+    "bootswatch": "~3.3.5"
   },
   "devDependencies": {
     "jasmine": "2.3.x",
