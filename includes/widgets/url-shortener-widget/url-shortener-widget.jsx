@@ -6,10 +6,13 @@ import React from 'react';
 
 const injections = [ 'axEventBus', 'axFeatures', 'axReactRender', 'axContext' ];
 
+const URL_CHECKER = /\b(https?|ftp|file):\/\/[\-A-Za-z0-9+&@#\/%?=~_|!:,.;]*[\-A-Za-z0-9+&@#\/%=~_|‌​]/;
+
 function create( eventBus, features, reactRender, context ) {
 
    const model = {
       waiting: false,
+      invalidUrl: false,
       viewUrl: '',
       submitUrl: null,
       shortUrl: null
@@ -56,10 +59,18 @@ function create( eventBus, features, reactRender, context ) {
    function renderResult() {
       const resultClasses = {
          waiting: model.waiting,
-         hidden: !(model.waiting || model.shortUrl ),
+         hidden: !(model.waiting || model.shortUrl || model.invalidUrl),
          'url-shortener-result-ok': model.shortUrl,
+         'url-shortener-result-invalid': model.invalidUrl,
          jumbotron: true
       };
+
+      if( model.invalidUrl ) {
+         return <div className={classList( resultClasses )}>
+            <h3 className='text-center'>Please enter a valid URL</h3>
+         </div>
+      }
+
       const resultTitle = 'Short URL for "' + model.submitUrl + '"';
       const result = model.waiting ?
          <i className='fa fa-spinner' /> :
@@ -77,14 +88,21 @@ function create( eventBus, features, reactRender, context ) {
 
    function updateUrl( ev ) {
       model.viewUrl = ev.target.value;
+      model.invalidUrl = false;
       render();
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    function submit() {
-      model.waiting = true;
+      model.invalidUrl = !URL_CHECKER.test( model.viewUrl );
+      if( model.invalidUrl ) {
+         render();
+         return;
+      }
       model.submitUrl = model.viewUrl;
+      model.waiting = true;
+
       render();
       eventBus.publish( 'takeActionRequest.' + features.shorten.action, {
          action: features.shorten.action,

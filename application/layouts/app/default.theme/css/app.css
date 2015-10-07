@@ -5,3 +5,7 @@
 .one-column-layout .ax-footer {
    margin-top: 60px
 }
+
+[data-ax-widget-area='content'] {
+   min-height: 244px;
+}

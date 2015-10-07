@@ -13,7 +13,8 @@ window.laxar = ( function() {
       widgets: {
          kurzd: {
             elasticsearch: {
-               host: 'localhost:9200',
+               // host: 'localhost:9200',
+               // type: 'url-mappings',
                index: 'kurzd'
             }
          }
