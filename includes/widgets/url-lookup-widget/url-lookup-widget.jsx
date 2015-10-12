@@ -5,11 +5,14 @@
 import React from 'react';
 import ax from 'laxar';
 
-const injections = [ 'axEventBus', 'axFeatures', 'axReactRender', 'axContext' ];
+const injections = [ 'axEventBus', 'axFeatures', 'axReactRender', 'axContext', 'axControls' ];
 
+const REDIRECT_MS = 1000;
 const keyLength = 6;
 
-function create( eventBus, features, reactRender, context ) {
+function create( eventBus, features, reactRender, context, controls ) {
+
+   const ProgressIndicator = controls.provide( 'laxar-progress-indicator-control' );
 
    const model = {
       waiting: false,
@@ -68,18 +71,28 @@ function create( eventBus, features, reactRender, context ) {
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    function startRedirect( url ) {
+      if( model.redirect.url === url ) {
+         // already in progress:
+         return;
+      }
+
       cancelAnyRedirect();
 
-      model.redirect.timeout = window.setTimeout( next, 1000 );
-      model.redirect.inSeconds = 3;
       model.redirect.url = url;
+      model.redirect.startMs = Date.now();
+      model.redirect.id = false;
+      window.requestAnimationFrame( next );
+
       function next() {
-         --model.redirect.inSeconds;
-         if( model.redirect.inSeconds <= 0 ) {
+         if( model.redirect.url !== url ) {
+            return;
+         }
+         model.redirect.progress = ( Date.now() - model.redirect.startMs ) / REDIRECT_MS;
+         if( model.redirect.progress >= 1 ) {
             window.location.href = model.url;
          }
          else {
-            model.redirect.timeout = window.setTimeout( next, 1000 );
+            window.requestAnimationFrame( next );
          }
          render();
       }
@@ -88,13 +101,10 @@ function create( eventBus, features, reactRender, context ) {
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    function cancelAnyRedirect() {
-      if( model.redirect.timeout === null ) {
-         return;
-      }
-      window.clearTimeout( model.redirect.timeout );
-      model.redirect.timeout = null;
       model.redirect.url = null;
-      model.redirect.inSeconds = null;
+      model.redirect.startMs = null;
+      model.redirect.progress = 0;
+      model.redirect.cancelled = true;
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -158,7 +168,7 @@ function create( eventBus, features, reactRender, context ) {
          }
          if( redirect ) {
             return {
-               symbol: model.redirect.inSeconds || '0',
+               symbol: <ProgressIndicator progress={redirect.progress} />,
                info: <span>Redirecting to<br /><a href={model.redirect.url}>{model.redirect.url}</a></span>
             };
          }
@@ -185,13 +195,13 @@ function create( eventBus, features, reactRender, context ) {
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    function lookupImmediately() {
-      if( model.submitKey === model.viewKey ) {
+      if( model.submitKey === model.viewKey.toLowerCase() ) {
          return;
       }
       cancelAnyRedirect();
       model.notFound = false;
       model.waiting = true;
-      model.submitKey = model.viewKey;
+      model.submitKey = model.viewKey.toLowerCase();
       eventBus.publish( 'takeActionRequest.' + features.lookup.action, {
          action: features.lookup.action,
          data: {

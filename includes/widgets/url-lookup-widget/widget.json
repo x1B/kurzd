@@ -2,6 +2,10 @@
    "name": "url-lookup-widget",
    "description": "Redirects to shortened URLs",
 
+   "controls": [
+      "laxar-progress-indicator-control"
+   ],
+
    "integration": {
       "technology": "react",
       "type": "widget"

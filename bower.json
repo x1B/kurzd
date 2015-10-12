@@ -4,7 +4,7 @@
   "description": "A URL shortener for use as an ElasticSearch plugin",
   "license": "MIT",
   "dependencies": {
-    "laxar": "~1.1.0-alpha.9",
+    "laxar": "~1.1.0-beta.0",
     "laxar-uikit": "~1.1.0",
     "laxar-patterns": "~1.1.0-alpha.2",
     "react": "~0.13.3",
@@ -13,7 +13,8 @@
     "bootswatch": "~3.3.5"
   },
   "devDependencies": {
-    "jasmine": "2.3.x",
-    "laxar-mocks": "~0.4.0"
+    "jasmine": "1.3.x",
+    "jasmine2": "jasmine#2.3.x",
+    "laxar-mocks": "~0.5.0"
   }
 }

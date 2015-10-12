@@ -2,9 +2,6 @@
   "generator-laxarjs": {
     "author": "Michael Kurze",
     "homepage": "",
-    "licenses": [
-      "MIT"
-    ],
     "laxarIntegrationTechnology": "plain"
   }
 }

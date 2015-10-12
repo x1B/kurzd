@@ -6,7 +6,9 @@ var require = {
    ],
    paths: {
       // LaxarJS Core and dependencies:
-      laxar: 'laxar/dist/laxar.with-deps',
+      laxar: 'laxar/dist/laxar',
+      jjv: 'jjv/lib/jjv',
+      jjve: 'jjve/jjve',
       requirejs: 'requirejs/require',
       text: 'requirejs-plugins/lib/text',
       json: 'requirejs-plugins/src/json',
@@ -42,7 +44,8 @@ var require = {
 
       // Application specific:
       react: 'react/react',
-      'laxar-react-adapter': '../includes/lib/laxar-react-adapter/laxar-react-adapter'
+      'laxar-progress-indicator-control': '../includes/controls/progress-indicator-control',
+      'laxar-react-adapter': 'laxar-react-adapter/laxar-react-adapter'
    },
    packages: [
       {

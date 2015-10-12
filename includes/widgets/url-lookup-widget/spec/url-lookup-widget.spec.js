@@ -3,18 +3,19 @@
  * Released under the MIT license
  */
 define( [
-  'json!../widget.json',
-  'laxar-mocks'
-], function( descriptor, axMocks ) {
-  'use strict';
+   'json!../widget.json',
+   'laxar-react-adapter',
+   'laxar-mocks'
+], function( descriptor, axReactAdapter, axMocks ) {
+   'use strict';
 
    // Minimalistic test setup. More information:
    // https://github.com/LaxarJS/laxar-mocks/blob/master/docs/manuals/index.md
-
    describe( 'The url-lookup-widget', function() {
 
       beforeEach( axMocks.createSetupForWidget( descriptor, {
-         knownMissingResources: []
+         adapter: axReactAdapter,
+         knownMissingResources: [ 'default.theme/url-lookup-widget.html' ]
       } ) );
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -29,8 +30,8 @@ define( [
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      it( 'still needs some tests', function() {
-         // ... first test here
+      it( 'subscribes', function() {
+         expect( axMocks.widget.axEventBus.subscribe ).toHaveBeenCalled();
       } );
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////

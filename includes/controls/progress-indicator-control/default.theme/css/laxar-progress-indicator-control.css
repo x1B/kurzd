@@ -1,0 +1,10 @@
+.laxar-progress-indicator-control svg {
+   width: 100px;
+   height: 100px;
+}
+
+.laxar-progress-indicator-control svg path {
+   stroke: black;
+   stroke-width: 10px;
+   fill: transparent;
+}
